@@ -1,0 +1,15 @@
+.env
+*~
+node_modules
+*.fdb
+*.log
+
+# IntelliJ
+# =========
+.iml
+.idea/
+
+# Docs
+# =========
+docs/
+coverage/

@@ -1,2 +1,3 @@
-# nodejs-spa-cpfcnpj-app
-Aplicação de validação de CPF/CNPJ em NodeJS, com uma interface SPA.
+# CPF/CNPJ Application
+
+Application for CPF/CNPJ (Brazilian document) validation, containing an interface for records management, with filter possibility, reordering and black list.

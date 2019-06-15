@@ -7,6 +7,14 @@
   "author": "Rafael Brandino <rbrandino@gmail.com>",
   "license": "UNLICENSED",
   "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "start-watch": "nodemon index.js",
+    "test": "jest",
+    "test-watch": "jest --watchAll",
+    "lint": "eslint .",
+    "lint:report": "eslint ./ --format html --output-file ./reports/eslint.html"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -15,6 +23,8 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.17.3"
+    "eslint-plugin-import": "^2.17.3",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1"
   }
 }

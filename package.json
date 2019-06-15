@@ -1,0 +1,15 @@
+{
+  "name": "nodejs-spa-cpfcnpj-app",
+  "version": "1.0.0",
+  "description": "Application for CPF/CNPJ validation",
+  "main": "src/index.js",
+  "repository": "git@github.com:rbrandino1/nodejs-spa-cpfcnpj-app.git",
+  "author": "Rafael Brandino <rbrandino@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.3"
+  }
+}

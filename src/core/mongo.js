@@ -94,6 +94,17 @@ function updateOneDocument({ collection, documentIdToUpdate, documentFieldsToUpd
   })
 }
 
+function deleteOneDocument({ collection, documentIdToDelete }) {
+  return new Promise((resolve, reject) => {
+    if (!documentIdToDelete) return resolve()
+
+    collection.deleteOne({ _id: new ObjectID(documentIdToDelete) }, (error, result) => {
+      error ? reject(error) : resolve(result)
+    })
+  })
+}
+
+
 module.exports = {
   getMongoClient,
   getMongoDocumentsCollection,
@@ -101,5 +112,6 @@ module.exports = {
   getDocumentsStream,
   getDocumentById,
   insertOneDocument,
-  updateOneDocument
+  updateOneDocument,
+  deleteOneDocument
 }

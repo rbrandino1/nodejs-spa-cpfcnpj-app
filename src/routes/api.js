@@ -5,7 +5,8 @@ const {
   getDocumentsStream,
   getDocumentById,
   insertOneDocument,
-  updateOneDocument
+  updateOneDocument,
+  deleteOneDocument
 } = require('../core/mongo')
 
 const { errorCatcher } = require('../utils')
@@ -75,9 +76,22 @@ function initRoutes(app) {
       client.close()
       next()
     }))
-    .delete((request, response) => {
-      response.json({ message: 'Feature not implemented' })
-    })
+    .delete(errorCatcher(async(request, response, next) => {
+      const documentIdToDelete = request.document._id
+
+      const client = await getMongoClient()
+      const collection = await getMongoDocumentsCollection(client)
+      await deleteOneDocument({
+        collection,
+        documentIdToDelete
+      })
+
+      response.status(200)
+        .send({ id: documentIdToDelete })
+
+      client.close()
+      next()
+    }))
 
   app.param('documentId', errorCatcher(async(request, response, next) => {
     const documentId = request.params.documentId
@@ -88,8 +102,14 @@ function initRoutes(app) {
       documentId
     })
 
-    request.document = result
     client.close()
+
+    if (!result) {
+      return response.status(404)
+        .send({ message: 'Document not found!' })
+    }
+
+    request.document = result
     next()
   }))
 }

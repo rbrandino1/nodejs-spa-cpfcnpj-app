@@ -19,22 +19,27 @@ function initRoutes(app) {
       const limit = request.query.limit && parseInt(request.query.limit)
       const client = await getMongoClient()
       const collection = await getMongoDocumentsCollection(client)
-      const cursor = getDocumentsStream({
+      const documents = await getDocumentsStream({
         collection,
         filters,
         order,
         limit
       })
 
-      cursor.on('data', data => response.write(JSON.stringify(data)))
-      cursor.on('end', () => {
-        client.close()
-        response.end()
-        next()
-      })
+      response.json(documents)
+
+      client.close()
+      response.end()
+      next()
     }))
     .post(errorCatcher(async(request, response, next) => {
       const document = request.body
+
+      Object.assign(document, {
+        type: (document.cpfcnpj.length === 11 ? 'cpf' : 'cnpj'),
+        active: true
+      })
+
       const client = await getMongoClient()
       const collection = await getMongoDocumentsCollection(client)
       const result = await insertOneDocument({

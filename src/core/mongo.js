@@ -31,16 +31,6 @@ function getMongoDocumentsCollection(client) {
   })
 }
 
-function getDocumentsStream({ collection, filters, order, limit }) {
-  const queryLimit = Math.min(parseInt(limit) || DEFAULT_LIMIT, MAX_LIMIT)
-  let queryEnvelope = collection.find(filters)
-    .limit(queryLimit)
-
-  if (ORDER_FIELDS.includes(order)) queryEnvelope.sort({ [order]: 1 })
-
-  return queryEnvelope.stream()
-}
-
 function buildMongoQuery(queryParams) {
   const mongoQuery = {}
 
@@ -63,9 +53,30 @@ function buildMongoQuery(queryParams) {
   return mongoQuery
 }
 
+function getDocumentsStream({ collection, filters, order, limit }) {
+  const queryLimit = Math.min(parseInt(limit) || DEFAULT_LIMIT, MAX_LIMIT)
+  let queryEnvelope = collection.find(filters)
+    .limit(queryLimit)
+
+  if (ORDER_FIELDS.includes(order)) queryEnvelope.sort({ [order]: 1 })
+
+  return queryEnvelope.stream()
+}
+
+function insertOneDocument({ collection, document }) {
+  return new Promise((resolve, reject) => {
+    if (!document) return resolve()
+
+    collection.insertOne(document, (error, result) => {
+      error ? reject(error) : resolve(result)
+    })
+  })
+}
+
 module.exports = {
   getMongoClient,
   getMongoDocumentsCollection,
+  buildMongoQuery,
   getDocumentsStream,
-  buildMongoQuery
+  insertOneDcument
 }

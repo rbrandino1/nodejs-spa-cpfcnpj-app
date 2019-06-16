@@ -1,4 +1,10 @@
-const { getMongoClient, getMongoDocumentsCollection, getDocumentsStream, buildMongoQuery } = require('../core/mongo')
+const {
+  getMongoClient,
+  getMongoDocumentsCollection,
+  buildMongoQuery, getDocumentsStream,
+  insertOneDocument
+} = require('../core/mongo')
+
 const { errorCatcher } = require('../utils')
 
 function initRoutes(app) {
@@ -20,14 +26,26 @@ function initRoutes(app) {
       cursor.on('end', () => {
         client.close()
         response.end()
-        return next()
+        next()
       })
     }))
-    .post((request, response) => {
-      response.json({ message: 'Feature not implemented' })
-    })
+    .post(errorCatcher(async(request, response, next) => {
+      const document = request.body
+      const client = await getMongoClient()
+      const collection = await getMongoDocumentsCollection(client)
+      const result = await insertOneDocument({
+        collection,
+        document
+      })
 
-  app.route('/document/:documentId')
+      response.status(201)
+        .send({ id: result.insertedId })
+
+      client.close()
+      next()
+    }))
+
+  app.route('/document/:id')
     .get((request, response) => {
       response.json({ message: 'Feature not implemented' })
     })

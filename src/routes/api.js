@@ -4,7 +4,8 @@ const {
   buildMongoQuery,
   getDocumentsStream,
   getDocumentById,
-  insertOneDocument
+  insertOneDocument,
+  updateOneDocument
 } = require('../core/mongo')
 
 const { errorCatcher } = require('../utils')
@@ -51,9 +52,29 @@ function initRoutes(app) {
     .get((request, response) => {
       response.json(request.document)
     })
-    .put((request, response) => {
-      response.json({ message: 'Feature not implemented' })
-    })
+    .put(errorCatcher(async(request, response, next) => {
+      const documentIdToUpdate = request.document._id
+
+      // For security purposes only merge these parameters
+      const documentFieldsToUpdate = {
+        cpfcnpj: request.body.cpfcnpj,
+        active: request.body.active
+      }
+
+      const client = await getMongoClient()
+      const collection = await getMongoDocumentsCollection(client)
+      await updateOneDocument({
+        collection,
+        documentIdToUpdate,
+        documentFieldsToUpdate
+      })
+
+      response.status(200)
+        .send({ id: documentIdToUpdate })
+
+      client.close()
+      next()
+    }))
     .delete((request, response) => {
       response.json({ message: 'Feature not implemented' })
     })

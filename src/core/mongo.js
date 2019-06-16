@@ -83,11 +83,23 @@ function insertOneDocument({ collection, document }) {
   })
 }
 
+function updateOneDocument({ collection, documentIdToUpdate, documentFieldsToUpdate }) {
+  return new Promise((resolve, reject) => {
+    if (!documentIdToUpdate || !documentFieldsToUpdate) return resolve()
+
+    collection.updateOne({ _id: new ObjectID(documentIdToUpdate) },
+      { $set: documentFieldsToUpdate }, { upsert: false }, (error, result) => {
+        error ? reject(error) : resolve(result)
+      })
+  })
+}
+
 module.exports = {
   getMongoClient,
   getMongoDocumentsCollection,
   buildMongoQuery,
   getDocumentsStream,
   getDocumentById,
-  insertOneDocument
+  insertOneDocument,
+  updateOneDocument
 }

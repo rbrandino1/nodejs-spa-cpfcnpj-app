@@ -5,6 +5,7 @@ const MAX_LIMIT = 1000
 const FILTER_TYPES_MAP = {
   cpfcnpj: 'integer',
   type: 'string',
+  active: 'boolean',
   fromDate: 'datetime',
   toDate: 'datetime'
 }
@@ -60,7 +61,7 @@ function getDocumentsStream({ collection, filters, order, limit }) {
 
   if (ORDER_FIELDS.includes(order)) queryEnvelope.sort({ [order]: 1 })
 
-  return queryEnvelope.stream()
+  return queryEnvelope.toArray()
 }
 
 function getDocumentById({ collection, documentId }) {

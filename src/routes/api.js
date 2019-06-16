@@ -1,7 +1,8 @@
 const {
   getMongoClient,
   getMongoDocumentsCollection,
-  buildMongoQuery, getDocumentsStream,
+  buildMongoQuery,
+  getDocumentsStream,
   insertOneDocument
 } = require('../core/mongo')
 
@@ -45,7 +46,7 @@ function initRoutes(app) {
       next()
     }))
 
-  app.route('/document/:id')
+  app.route('/document/:documentId')
     .get((request, response) => {
       response.json({ message: 'Feature not implemented' })
     })

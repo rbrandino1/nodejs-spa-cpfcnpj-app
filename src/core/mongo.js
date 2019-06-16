@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectID } = require('mongodb')
 
 const DEFAULT_LIMIT = 100
 const MAX_LIMIT = 1000
@@ -63,6 +63,16 @@ function getDocumentsStream({ collection, filters, order, limit }) {
   return queryEnvelope.stream()
 }
 
+function getDocumentById({ collection, documentId }) {
+  return new Promise((resolve, reject) => {
+    if (!documentId) return resolve()
+
+    collection.findOne({ '_id': new ObjectID(documentId) }, (error, result) => {
+      error ? reject(error) : resolve(result)
+    })
+  })
+}
+
 function insertOneDocument({ collection, document }) {
   return new Promise((resolve, reject) => {
     if (!document) return resolve()
@@ -78,5 +88,6 @@ module.exports = {
   getMongoDocumentsCollection,
   buildMongoQuery,
   getDocumentsStream,
-  insertOneDcument
+  getDocumentById,
+  insertOneDocument
 }

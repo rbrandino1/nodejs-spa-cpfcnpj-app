@@ -1,5 +1,5 @@
 const winston = require('winston')
-const express = require('./config/express')
+const express = require('./core/express')
 
 const app = express.init()
 const port = process.env.PORT || 3000

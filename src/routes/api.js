@@ -3,13 +3,14 @@ const {
   getMongoDocumentsCollection,
   buildMongoQuery,
   getDocumentsStream,
+  getDocumentById,
   insertOneDocument
 } = require('../core/mongo')
 
 const { errorCatcher } = require('../utils')
 
 function initRoutes(app) {
-  app.route('/document')
+  app.route('/documents')
     .get(errorCatcher(async(request, response, next) => {
       const filters = buildMongoQuery(request.query)
       const order = request.query.order
@@ -23,7 +24,7 @@ function initRoutes(app) {
         limit
       })
 
-      cursor.on('data', data => response.json(data))
+      cursor.on('data', data => response.write(JSON.stringify(data)))
       cursor.on('end', () => {
         client.close()
         response.end()
@@ -46,9 +47,9 @@ function initRoutes(app) {
       next()
     }))
 
-  app.route('/document/:documentId')
+  app.route('/documents/:documentId')
     .get((request, response) => {
-      response.json({ message: 'Feature not implemented' })
+      response.json(request.document)
     })
     .put((request, response) => {
       response.json({ message: 'Feature not implemented' })
@@ -56,6 +57,20 @@ function initRoutes(app) {
     .delete((request, response) => {
       response.json({ message: 'Feature not implemented' })
     })
+
+  app.param('documentId', errorCatcher(async(request, response, next) => {
+    const documentId = request.params.documentId
+    const client = await getMongoClient()
+    const collection = await getMongoDocumentsCollection(client)
+    const result = await getDocumentById({
+      collection,
+      documentId
+    })
+
+    request.document = result
+    client.close()
+    next()
+  }))
 }
 
 module.exports = { initRoutes }

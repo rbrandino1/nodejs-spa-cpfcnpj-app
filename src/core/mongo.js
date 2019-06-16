@@ -63,11 +63,11 @@ function getDocumentsStream({ collection, filters, order, limit }) {
   return queryEnvelope.stream()
 }
 
-function getDocumentById({ collection, id }) {
+function getDocumentById({ collection, documentId }) {
   return new Promise((resolve, reject) => {
-    if (!id) return resolve()
+    if (!documentId) return resolve()
 
-    collection.findOne({ '_id': new ObjectID(id) }, (error, result) => {
+    collection.findOne({ '_id': new ObjectID(documentId) }, (error, result) => {
       error ? reject(error) : resolve(result)
     })
   })
@@ -88,5 +88,6 @@ module.exports = {
   getMongoDocumentsCollection,
   buildMongoQuery,
   getDocumentsStream,
+  getDocumentById,
   insertOneDocument
 }

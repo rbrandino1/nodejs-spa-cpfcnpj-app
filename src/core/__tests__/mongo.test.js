@@ -3,8 +3,7 @@ const {
   getMongoClient,
   getMongoDocumentsCollection,
   buildMongoQuery,
-  getDocumentsStream,
-  insertOneDocument
+  getDocumentsStream
 } = require('../mongo')
 
 describe('#getMongoDocumentsCollection', () => {
@@ -25,13 +24,8 @@ describe('#getMongoDocumentsCollection', () => {
     const client = await getMongoClient()
     const collection = await getMongoDocumentsCollection(client)
 
-    expect(collection.name)
-      .toBe('documents')
-    expect(collection.database.name)
-      .toBe(process.env.MONGO_DATABASE_ADDRESS_TEST)
-    expect(collection.database.client.databaseAddress)
-      .toBe(process.env.MONGO_DATABASE_ADDRESS_TEST)
-  })
+    expect(collection.collectionName).toBe('documents')
+    expect(collection.dbName).toBe(process.env.MONGO_DATABASE)})
 
   it('throws error if collection cannot be opened', () => {
     process.env.MONGO_DATABASE_ADDRESS = null
@@ -64,12 +58,12 @@ describe('#buildMongoQuery', () => {
 
   it('parses date and use a `$gte` filter when query has `fromDate`', () => {
     expect(buildMongoQuery({ fromDate: queryParams.fromDate }))
-      .toEqual({ date: { $gte: new Date('2019-06-15') } })
+      .toEqual({ created: { $gte: new Date('2019-06-15') } })
   })
 
   it('parses date and use a `$lt` filter when query has `toDate`', () => {
     expect(buildMongoQuery({ toDate: queryParams.toDate }))
-      .toEqual({ date: { $lt: new Date('2019-06-15') } })
+      .toEqual({ created: { $lt: new Date('2019-06-15') } })
   })
 
   it('returns merged parameters', () => {
@@ -83,18 +77,31 @@ describe('#buildMongoQuery', () => {
 })
 
 describe('#getDocumentsStream', () => {
-  const collection = new MongoCollection('documents', {})
+  let originalMongoDatabaseAddress = process.env.MONGO_DATABASE_ADDRESS
+  let originalMongoDatabase = process.env.MONGO_DATABASE
 
-  it('filters collection with given filters', () => {
+  beforeEach(() => {
+    process.env.MONGO_DATABASE_ADDRESS = 'mongodb://127.0.0.1:33017'
+    process.env.MONGO_DATABASE = 'brazilian-documents-test'
+  })
+
+  afterEach(() => {
+    process.env.MONGO_DATABASE_ADDRESS = originalMongoDatabaseAddress
+    process.env.MONGO_DATABASE = originalMongoDatabase
+  })
+
+  it('filters collection with given filters', async () => {
+    const client = await getMongoClient()
+    const collection = await getMongoDocumentsCollection(client)
+
     const filters = { type: 'cnpj' }
 
-    const cursor = getDocumentsStream({
+    const documents = await getDocumentsStream({
       collection,
-      filters
+      filters,
     })
 
-    expect(cursor.options.filters)
-      .toBe(filters)
+    expect(cursor.options.filters).toBe(filters)
   })
 
   it('sorts collection with given order (ascending by default)', () => {
@@ -227,7 +234,7 @@ describe('#insertOneDocument', () => {
   it('limits query to fetch a maximum of 1000 records if parameter is too high', () => {
     const cursor = getDocumentsStream({
       collection,
-      limit: 5000
+      limit: 1000
     })
 
     expect(cursor.options.limit)

@@ -85,6 +85,8 @@ $ curl 'localhost:3000/api/documents?fromDate=2019-06-15&toDate=2019-06-16&limit
 Each project has its own set of unit tests. In order to execute them, run `yarn test` or `yarn test-watch` (to use watch mode) in the proper folder.
 
 ## Todo:
+Devido ao tempo que consegui dedicar ao desenvolviment não foi possível realizar todas as tarefas.
+Segue uma lista de #To-Do.
 
 #### Server:
 - Na inserção de um novo documento, validar o schema do json: (CPF\CPNJ é válido).
@@ -93,3 +95,11 @@ Each project has its own set of unit tests. In order to execute them, run `yarn 
 
 #### Client:
 - O retorno do consumo das APIs do backend, em caso de erros alterar para apresentar um feedback ao usuário através de mensagens em tela.
+- Na listagem de documentos, criar recurso para que seja possível aplicar os filtros por: CPF/CNPJ, datas (FromDate e ToDate) e ativos/inativos.
+- Criar paginação da listagem.
+- Possibilitar ativar/desativar diretamente da listagem
+- Possibilitar reordenação da lista.
+
+
+#### Tests:
+- Após a mudança da API GET listagem de documentos, de Stream de dados para retornar uma array simples, os testes estão quebrando.

@@ -3,7 +3,7 @@ const { MongoClient, ObjectID } = require('mongodb')
 const DEFAULT_LIMIT = 100
 const MAX_LIMIT = 1000
 const FILTER_TYPES_MAP = {
-  cpfcnpj: 'integer',
+  cpfcnpj: 'string',
   type: 'string',
   active: 'boolean',
   fromDate: 'datetime',

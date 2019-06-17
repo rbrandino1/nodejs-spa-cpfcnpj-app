@@ -12,7 +12,7 @@ const {
 const { errorCatcher } = require('../utils')
 
 function initRoutes(app) {
-  app.route('/documents')
+  app.route('/api/documents')
     .get(errorCatcher(async(request, response, next) => {
       const filters = buildMongoQuery(request.query)
       const order = request.query.order
@@ -54,7 +54,7 @@ function initRoutes(app) {
       next()
     }))
 
-  app.route('/documents/:documentId')
+  app.route('/api/documents/:documentId')
     .get((request, response) => {
       response.json(request.document)
     })

@@ -84,6 +84,14 @@ $ curl 'localhost:3000/api/documents?fromDate=2019-06-15&toDate=2019-06-16&limit
 
 Each project has its own set of unit tests. In order to execute them, run `yarn test` or `yarn test-watch` (to use watch mode) in the proper folder.
 
+
+## Dev:
+Como o projeto ainda encontra-se em desenvolvimento, para executar o projeto diretamente do diretório raiz, sem docker:
+
+```sh
+yarn start-dev
+```
+
 ## Todo:
 
 #### Server:

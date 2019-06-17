@@ -1,0 +1,25 @@
+version: '3.4'
+networks:
+  net:
+    driver: overlay
+    attachable: true
+services:
+  mongo:
+    image: mongo:3.4
+    networks:
+      - net
+  api:
+    build:
+      context: ../
+      dockerfile: run/Dockerfile-dev
+    networks:
+      - net
+    ports:
+      - '3000:3000'
+    volumes:
+      - ../src:/usr/src/app/src
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_DATABASE
+      - MONGO_DATABASE_ADDRESS

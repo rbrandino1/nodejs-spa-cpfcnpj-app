@@ -2,7 +2,7 @@ const winston = require('winston')
 const express = require('./core/express')
 
 const app = express.init()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 global.logger = winston.createLogger({
   transports: [new winston.transports.Console()]

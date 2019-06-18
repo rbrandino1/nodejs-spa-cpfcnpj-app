@@ -64,11 +64,11 @@ Available parameters are:
 * `limit`: Maximum documents to be returned, default: `100` max value: `1000`
 
 
-The events are returned as a JSON format.
+The documents are returned as a JSON format.
 
 ### Examples
 
-Getting events for a client:
+Getting document by cpf/cnpj number:
 
 ```sh
 $ curl 'localhost:3000/api/documents?cpfcnpj=04710696985' -H 'Content-Type: application/json'
@@ -82,7 +82,7 @@ $ curl 'localhost:3000/api/documents?fromDate=2019-06-15&toDate=2019-06-16&limit
 
 ### Unit tests
 
-Each project has its own set of unit tests. In order to execute them, run `yarn test` or `yarn test-watch` (to use watch mode) in the proper folder.
+In order to execute them, run `yarn test` or `yarn test-watch` (to use watch mode) in the proper folder.
 
 
 ## Dev:
@@ -110,4 +110,4 @@ Segue uma lista de #To-Do.
 
 
 #### Tests:
-- Após a mudança da API GET listagem de documentos, de Stream de dados para retornar uma array simples, os testes estão quebrando.
+- Após a mudança da API GET listagem de documentos, de Stream de dados para retornar uma array simples, parte dos testes estão quebrando.
